@@ -4,8 +4,6 @@
 from bs4 import BeautifulSoup
 import datetime
 
-import pdb
-
 def main():
     print("insert into donations(donor, donee, amount, donation_date, donation_date_precision, donation_date_basis, url, notes) values")
     first = True
@@ -17,9 +15,12 @@ def main():
             amount = float(ps[0].find("span").text.replace("$", "").replace(",", ""))
             date = datetime.datetime.strptime(ps[1].find("span").text,
                                               "%B %d, %Y").strftime("%Y-%m-%d")
-            block = int(ps[2].find("strong").text[len("Block \n"):-len("\n:")])
-            spans = ps[2].find_all("span")
-            block_range = list(map(lambda x: x.text, spans))
+            block_info = []
+            for p in ps[2:]:
+                block = int(p.find("strong").text[len("Block \n"):-len("\n:")])
+                spans = p.find_all("span")
+                block_range = list(map(lambda x: x.text, spans))
+                block_info.append("Block {}, [{}–{}]".format(block, *block_range))
             print(("    " if first else "    ,") + "(" + ",".join([
                 mysql_quote(donor),  # donor
                 mysql_quote("Donor lottery"),  # donee
@@ -28,7 +29,7 @@ def main():
                 mysql_quote("day"),  # donation_date_precision
                 mysql_quote("transaction"),  # donation_date_basis
                 mysql_quote("https://app.effectivealtruism.org/lotteries/31553453298138"),  # url
-                mysql_quote("Block {}, [{}–{}]. See https://app.effectivealtruism.org/lotteries for general background; see http://effective-altruism.com/ea/1ip/announcing_the_2017_donor_lottery/ for the blog post announcing this lottery.".format(block, block_range[0], block_range[1])),  # notes
+                mysql_quote("{}. See https://app.effectivealtruism.org/lotteries for general background; see http://effective-altruism.com/ea/1ip/announcing_the_2017_donor_lottery/ for the blog post announcing this lottery.".format("; ".join(block_info))),  # notes
             ]) + ")")
             first = False
         print(";")
