@@ -29,8 +29,8 @@ def main():
                 mysql_quote(date),  # donation_date
                 mysql_quote("day"),  # donation_date_precision
                 mysql_quote("transaction"),  # donation_date_basis
-                mysql_quote("https://app.effectivealtruism.org/lotteries/31553453298138"),  # url
-                mysql_quote("{}. See https://app.effectivealtruism.org/lotteries for general background; see http://effective-altruism.com/ea/1ip/announcing_the_2017_donor_lottery/ for the blog post announcing this lottery.".format("; ".join(block_info))),  # notes
+                mysql_quote(sys.argv[2]),  # url
+                mysql_quote("{}, {}. See https://app.effectivealtruism.org/lotteries for general background; see {} for the blog post announcing this lottery.".format(sys.argv[3], "; ".join(block_info), sys.argv[4])),  # notes
             ]) + ")")
             first = False
         print(";")
