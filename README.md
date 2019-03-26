@@ -9,10 +9,11 @@ classes a bit because the processing script finds divs based on these classes.
 
 Go to a lottery page like
 https://app.effectivealtruism.org/lotteries/63715163508813 and use your
-browser's "inspect element" feature to find the div that contains all the
-lottery entries. Then right click do Copy → Outer HTML. Paste this HTML into a
-new file. Then run an HTML formatter such as `tidy` on the file. From vim this
-can be done as follows:
+browser's "inspect element" feature (right click on a page and do "inspect" or
+"inspect element") to find the div that contains all the lottery entries. Then
+right click and do Copy → Outer HTML. Paste this HTML into a new file. Then run
+an HTML formatter such as `tidy` on the file. From vim this can be done as
+follows:
 
 ```vim
 :%!tidy -q -w 0
