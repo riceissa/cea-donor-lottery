@@ -3,11 +3,12 @@
 
 from bs4 import BeautifulSoup
 import datetime
+import sys
 
 def main():
     print("insert into donations(donor, donee, amount, donation_date, donation_date_precision, donation_date_basis, url, notes) values")
     first = True
-    with open("data.html", "r") as f:
+    with open(sys.argv[1], "r") as f:
         soup = BeautifulSoup(f, "lxml")
         for entry in soup.find_all("div", {"class": "lost"}):
             donor = entry.find("h5").text.strip()
@@ -17,7 +18,7 @@ def main():
                                               "%B %d, %Y").strftime("%Y-%m-%d")
             block_info = []
             for p in ps[2:]:
-                block = int(p.find("strong").text[len("Block \n"):-len("\n:")])
+                block = int(p.find("strong").text.replace("\n", "")[len("Block "):-len(":")])
                 spans = p.find_all("span")
                 block_range = list(map(lambda x: x.text, spans))
                 block_info.append("Block {}, [{}–{}]".format(block, *block_range))
